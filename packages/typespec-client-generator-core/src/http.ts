@@ -680,17 +680,19 @@ export function getCorrespondingMethodParams(
   }
 
   // If mapping could not be found,  TCGC will report error since we can't generate the client code without this mapping.
-  diagnostics.add(
-    createDiagnostic({
-      code: "no-corresponding-method-param",
-      target: operation,
-      format: {
-        paramName: serviceParam.name,
-        methodName: operation.name,
-      },
-    }),
-  );
-  return diagnostics.wrap([]);
+  if (serviceParam.optional === false) {
+    diagnostics.add(
+      createDiagnostic({
+        code: "no-corresponding-method-param",
+        target: operation,
+        format: {
+          paramName: serviceParam.name,
+          methodName: operation.name,
+        },
+      }),
+    );
+    return diagnostics.wrap([]);
+  }
 }
 
 /**
